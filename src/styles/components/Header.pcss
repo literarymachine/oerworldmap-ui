@@ -5,10 +5,18 @@
   display: flex;
   font-family: 'Economica', sans-serif;
   font-size: 1.3rem;
-
-  /* flex-wrap: wrap; */
+  align-items: center;
   justify-content: space-between;
   background-color: var(--blue-dark);
+  position: relative;
+
+  & .menuToggle {
+    display: none;
+
+    & i {
+      pointer-events: none;
+    }
+  }
 
   & a,
   & .menuBtn {
@@ -27,18 +35,19 @@
     }
   }
 
-  & .userNav .menuBtn ul {
+  & .userMenu {
     position: absolute;
     list-style-type: none;
     margin: 0;
     padding: 0;
-    top: 44px;
-    right: 0;
+    top: 100%;
+    right: 1px;
     width: 170px;
-    background-color: var(--blue-lightest);
+    background-color: var(--white);
     border: 1px solid var(--blue-dark);
     z-index: 5;
-    border-radius: 2px;
+    border-radius: 0 0 2px 2px;
+    border-top: 1px solid var(--blue-light);
 
     & li a {
       padding: 10px;
@@ -50,7 +59,8 @@
 
       &:hover,
       &:focus {
-        background-color: var(--blue-light);
+        background-color: var(--blue-dark);
+        color: var(--white);
       }
     }
 
@@ -70,6 +80,14 @@
 
   & .mainNav h1 {
     padding: 0 20px;
+  }
+
+  & .mobile {
+    display: none;
+  }
+
+  & .mobileNav {
+    display: none;
   }
 
   & .userNav {
@@ -96,6 +114,81 @@
     }
 
     & .userNav {
+      display: none;
+    }
+  }
+
+  @media screen and (--mobile-breakpoint) {
+    & .menuToggle {
+      display: block;
+      color: var(--blue-lightest);
+      padding: 10px;
+    }
+
+    & .mainNav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      z-index: 5;
+      background-color: var(--blue-dark);
+      width: 100%;
+      border-top: 1px solid var(--blue-light);
+      border-radius: 0 0 2px 2px;
+
+      & > a {
+        display: block;
+        border-bottom: 1px solid var(--white);
+        margin: 0 10px;
+      }
+
+      &.show {
+        display: block;
+      }
+
+      & > a:last-child {
+        border: none;
+      }
+
+      & > a:first-child {
+        display: none;
+      }
+
+      & .mobile {
+        display: block;
+      }
+
+      & span.mobile {
+        display: inline-block;
+      }
+    }
+
+    & .userMenu {
+      width: 100%;
+      background-color: var(--blue-dark);
+      padding: 0 10px;
+
+      & li {
+        & > a {
+          color: var(--white);
+          border-bottom: 1px solid var(--white);
+
+          &:hover {
+            color: var(--orange);
+          }
+        }
+      }
+
+      & li:last-child a {
+        border-bottom: none;
+      }
+    }
+
+    & .mobileNav {
+      display: block;
+      color: var(--blue-lightest);
+    }
+
+    & .userNav a:first-child {
       display: none;
     }
   }

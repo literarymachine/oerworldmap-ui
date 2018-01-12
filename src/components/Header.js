@@ -19,7 +19,8 @@ class Header extends React.Component {
     super(props)
 
     this.state = {
-      showUserMenu: false
+      showUserMenu: false,
+      showMobileMenu: false
     }
     this.handleClick = this.handleClick.bind(this)
   }
@@ -35,15 +36,34 @@ class Header extends React.Component {
   handleClick(e) {
     if (e.target !== this.menuBtn)
       this.setState({showUserMenu:false})
+
+    if (e.target !== this.menuToggle)
+      this.setState({showMobileMenu:false})
   }
 
   render() {
     return (
       <header className="Header">
-        <nav className="mainNav">
+        <nav
+          className="menuToggle"
+          tabIndex="0"
+          role="button"
+          onClick={() => {this.setState({showMobileMenu:!this.state.showMobileMenu})}}
+          onKeyDown={triggerClick}
+          ref={el => this.menuToggle = el}
+        >
+          <i className="fa fa-bars" />
+        </nav>
+
+        <nav className={`mainNav ${this.state.showMobileMenu ? 'show' : '' }`}>
           <Link href="/resource/">
             <h1>OER WORLD MAP</h1>
           </Link>
+
+          <Link href="/resource/" className="mobile">
+            Map
+          </Link>
+
           <a
             href="/contribute"
             title={this.props.translate('Header.contribute')}
@@ -71,12 +91,21 @@ class Header extends React.Component {
             {this.props.translate('Header.blog')}
           </a>
           <a
+            href="/imprint"
+            title="Imprint & Privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mobile"
+          >
+            Imprint & Privacy
+          </a>
+          <a
             href="https://www.facebook.com/oerworldmap"
             title="Facebook"
             target="_blank"
             rel="noopener noreferrer"
           >
-            <i className="fa fa-facebook-official" />
+            <i className="fa fa-facebook-official" /> <span className="mobile">Facebook</span>
           </a>
           <a
             href="https://twitter.com/oerworldmap"
@@ -84,8 +113,12 @@ class Header extends React.Component {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <i className="fa fa-twitter" />
+            <i className="fa fa-twitter" /> <span className="mobile">Twitter</span>
           </a>
+        </nav>
+
+        <nav className="mobileNav" >
+          <i className="fa fa-globe" />
         </nav>
 
         <nav className="userNav">
@@ -104,28 +137,6 @@ class Header extends React.Component {
               ref={el => this.menuBtn = el}
             >
               <i className="fa fa-user" />
-
-              {this.state.showUserMenu &&
-                <ul>
-                  <li>
-                    <Link href={`/resource/${this.props.user.id}`} >My Profile <i className="fa fa-user" /></Link>
-                  </li>
-                  <li>
-                    <Link href="/user/password">Change Password <i className="fa fa-lock" /></Link>
-                  </li>
-                  <li>
-                    <a
-                      href="/.logout"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        this.props.emitter.emit('logout')
-                      }}
-                    >
-                      {this.props.translate('Header.logOut')} <i className="fa fa-sign-out" />
-                    </a>
-                  </li>
-                </ul>
-              }
             </div>
           ) : (
             <Link
@@ -136,6 +147,28 @@ class Header extends React.Component {
             </Link>
           )}
         </nav>
+
+        {this.state.showUserMenu &&
+          <ul className="userMenu">
+            <li>
+              <Link href={`/resource/${this.props.user.id}`} >My Profile <i className="fa fa-user" /></Link>
+            </li>
+            <li>
+              <Link href="/user/password">Change Password <i className="fa fa-lock" /></Link>
+            </li>
+            <li>
+              <a
+                href="/.logout"
+                onClick={(e) => {
+                  e.preventDefault()
+                  this.props.emitter.emit('logout')
+                }}
+              >
+                {this.props.translate('Header.logOut')} <i className="fa fa-sign-out" />
+              </a>
+            </li>
+          </ul>
+        }
 
       </header>
     )
