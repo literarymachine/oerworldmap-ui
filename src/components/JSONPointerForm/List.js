@@ -4,26 +4,18 @@ import PropTypes from 'prop-types'
 import ListItem from './ListItem'
 import withFormData from './withFormData'
 
-const List = ({name, value, children}) => (
+const List = ({name, value, children, setValue, defaultValue}) => (
   <ul>
     {value.map((item, index) => (
       <ListItem property={index} key={index}>
         {React.cloneElement(children)}
       </ListItem>
     ))}
-    <ListItem property={value.length} key={value.length}>
-      <div className="newItemWrapper">
-        <input
-          type="checkbox"
-          key={`${name}-${value.length}`}
-          className="formControl" id={`${name}-toggle`}
-        />
-        <label htmlFor={`${name}-toggle`}>Add {name}</label>
-        <div className="newItem">
-          {React.cloneElement(children)}
-        </div>
-      </div>
-    </ListItem>
+    <li>
+      <button type="button" onClick={() => setValue(value.concat(defaultValue))}>
+        Add {name}
+      </button>
+    </li>
   </ul>
 )
 

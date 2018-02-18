@@ -7,42 +7,40 @@ const withFormData = (BaseComponent) => {
 
   const formComponent = class FormComponent extends React.Component {
 
+    constructor(props, context) {
+      super(props)
+      const parents = context.path || []
+      this.path = props.property != null
+        ? [...parents, props.property]
+        : parents
+      this.name = jsonPointer.compile(this.path)
+      this.getValue = this.getValue.bind(this)
+      this.setValue = this.setValue.bind(this)
+    }
+
     getChildContext() {
       return {
-        path: this.getPath(),
-        formData: this.getFormData()
+        path: this.path,
+        formData: this.context.formData
       }
     }
 
-    getPath() {
-      const parents = this.context.path || []
-      return this.props.property != null ? [...parents, this.props.property] : parents
+    getValue() {
+      return jsonPointer.has(this.context.formData, this.name)
+        ? jsonPointer.get(this.context.formData, this.name)
+        : undefined
     }
 
-    getFormData() {
-      return this.context.formData || {}
+    setValue(value) {
+      const formData = JSON.parse(JSON.stringify(this.context.formData))
+      value == null
+        ? jsonPointer.remove(formData, this.name)
+        : jsonPointer.set(formData, this.name, value)
+      this.context.setFormData(formData)
     }
 
     render() {
-      const name = jsonPointer.compile(this.getPath())
-      const value = jsonPointer.has(this.getFormData(), name)
-        ? jsonPointer.get(this.getFormData(), name) : undefined
-      const setValue = value => {
-        console.log(name, value, value !== null)
-        // Clone current state so it is not modified in place
-        const copy = JSON.parse(JSON.stringify(this.getFormData()))
-        value == null ? jsonPointer.remove(copy, name) : jsonPointer.set(copy, name, value)
-        // This is necessary to remove potential empty array values
-        this.context.setFormData(
-          Object.entries(jsonPointer.dict(copy)).reduce((acc, curr) => {
-            curr[1] != null && jsonPointer.set(acc, curr[0], curr[1])
-            return acc
-          }, {})
-        )
-      }
-
-      return <BaseComponent {...this.props} name={name} value={value} setValue={setValue} />
-
+      return <BaseComponent {...this.props} name={this.name} value={this.getValue()} setValue={this.setValue} />
     }
 
   }

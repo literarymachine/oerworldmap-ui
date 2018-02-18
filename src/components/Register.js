@@ -46,15 +46,12 @@ const Register = ({translate, emitter}) => (
       </div> */}
       <Form action="https://httpbin.org/get">
         <Fieldset property="foo">
-          <List property="bagga">
+          <List property="bagga" defaultValue={{}}>
             <Fieldset>
               <Input property="fone" />
               <Input property="ftwo" />
-              <List property="sdflkjsdlkfjsdf">
-                <Fieldset>
-                  <Input property="ddddfone" />
-                  <Input property="fdddtwo" />
-                </Fieldset>
+              <List property="sdflkjsdlkfjsdf" defaultValue={''}>
+                <Input />
               </List>
             </Fieldset>
           </List>
