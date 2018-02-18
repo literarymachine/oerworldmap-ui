@@ -26,7 +26,7 @@ const withFormData = (BaseComponent) => {
     render() {
       const name = jsonPointer.compile(this.getPath())
       const value = jsonPointer.has(this.getFormData(), name)
-        ? jsonPointer.get(this.getFormData(), name) : null
+        ? jsonPointer.get(this.getFormData(), name) : undefined
       const setValue = value => {
         console.log(name, value, value !== null)
         // Clone current state so it is not modified in place
@@ -41,9 +41,8 @@ const withFormData = (BaseComponent) => {
         )
       }
 
-      return value
-        ? <BaseComponent {...this.props} name={name} value={value} setValue={setValue} />
-        : <BaseComponent {...this.props} name={name} setValue={setValue} />
+      return <BaseComponent {...this.props} name={name} value={value} setValue={setValue} />
+
     }
 
   }

@@ -11,7 +11,7 @@ const Input = ({type, name, value, setValue}) => (
     placeholder={name}
     onChange={e => setValue(
       e.target.type === 'checkbox'
-        ? (e.target.checked ? true : null)
+        ? (e.target.checked ? "true" : null)
         : e.target.value
     )}
   />
