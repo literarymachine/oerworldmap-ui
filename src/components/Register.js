@@ -2,6 +2,14 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Composer } from 'json-pointer-form'
 
+import Form from './JSONPointerForm/Form'
+
+
+import Input from './JSONPointerForm/Input'
+import Fieldset from './JSONPointerForm/Fieldset'
+import List from './JSONPointerForm/List'
+import ListItem from './JSONPointerForm/ListItem'
+
 import withI18n from './withI18n'
 import withEmitter from './withEmitter'
 import FullModal from './FullModal'
@@ -11,7 +19,7 @@ import schema from '../json/schema.json'
 const Register = ({translate, emitter}) => (
   <div className="Register">
     <FullModal>
-      <div>
+      {/* <div>
         <h1>{translate('login')}</h1>
         <p>{translate('UserIndex.register.loginMessage')}</p>
         <a className="btn" href="/.login">{translate('login')}</a>
@@ -35,7 +43,29 @@ const Register = ({translate, emitter}) => (
           getLabel={value => translate(value)}
           submitLabel={translate('UserIndex.register.register')}
         />
-      </div>
+      </div> */}
+      <Form action="https://httpbin.org/get">
+        <Fieldset property="foo">
+          <List property="bagga">
+            <Fieldset>
+              <Input property="fone" />
+              <Input property="ftwo" />
+              <List property="sdflkjsdlkfjsdf">
+                <Fieldset>
+                  <Input property="ddddfone" />
+                  <Input property="fdddtwo" />
+                </Fieldset>
+              </List>
+            </Fieldset>
+          </List>
+          <Fieldset property="bar">
+            <div>
+              <h1>I'm in a div</h1>
+              <Input type="checkbox" property="bam" />
+            </div>
+          </Fieldset>
+        </Fieldset>
+      </Form>
     </FullModal>
   </div>
 )
