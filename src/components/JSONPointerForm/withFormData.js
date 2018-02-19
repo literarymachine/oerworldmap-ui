@@ -3,6 +3,21 @@ import PropTypes from 'prop-types'
 import jsonPointer from 'json-pointer'
 import _ from 'lodash'
 
+// https://stackoverflow.com/a/26202058
+const prune = (current) => {
+  _.forOwn(current, (value, key) => {
+    if (_.isUndefined(value) || _.isNull(value) || _.isNaN(value) ||
+      (_.isString(value) && _.isEmpty(value)) ||
+      (_.isObject(value) && _.isEmpty(prune(value)))) {
+      delete current[key]
+    }
+  })
+  if (_.isArray(current)) {
+    _.pull(current, undefined)
+  }
+  return current
+}
+
 const withFormData = (BaseComponent) => {
 
   const formComponent = class FormComponent extends React.Component {
@@ -32,10 +47,8 @@ const withFormData = (BaseComponent) => {
     }
 
     setValue(value) {
-      value == null
-        ? jsonPointer.remove(this.context.formData, this.name)
-        : jsonPointer.set(this.context.formData, this.name, value)
-      this.context.setFormData(this.context.formData)
+      jsonPointer.set(this.context.formData, this.name, value)
+      this.context.setFormData(prune(this.context.formData))
     }
 
     render() {
