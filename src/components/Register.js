@@ -9,6 +9,7 @@ import Input from './JSONPointerForm/Input'
 import Fieldset from './JSONPointerForm/Fieldset'
 import List from './JSONPointerForm/List'
 import ListItem from './JSONPointerForm/ListItem'
+import Builder from './JSONPointerForm/Builder'
 
 import withI18n from './withI18n'
 import withEmitter from './withEmitter'
@@ -17,7 +18,7 @@ import '../styles/components/Register.pcss'
 import schema from '../json/schema.json'
 
 const Register = ({translate, emitter}) => (
-  <div className="Register">
+  <div className="">
     <FullModal>
       {/* <div>
         <h1>{translate('login')}</h1>
@@ -44,7 +45,7 @@ const Register = ({translate, emitter}) => (
           submitLabel={translate('UserIndex.register.register')}
         />
       </div> */}
-      <Form action="https://httpbin.org/get">
+      {/* <Form action="https://httpbin.org/get">
         <Fieldset property="foo">
           <List property="bagga" defaultValue={{}}>
             <Fieldset>
@@ -62,7 +63,8 @@ const Register = ({translate, emitter}) => (
             </div>
           </Fieldset>
         </Fieldset>
-      </Form>
+      </Form> */}
+      <Builder schema={schema} />
     </FullModal>
   </div>
 )
