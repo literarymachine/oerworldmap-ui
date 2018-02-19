@@ -17,7 +17,7 @@ class Form extends React.Component {
 
   getChildContext() {
     return {
-      formData: this.state.formData,
+      formData: JSON.parse(JSON.stringify(this.state.formData)),
       setFormData: formData => this.setState({formData})
     }
   }
@@ -27,7 +27,10 @@ class Form extends React.Component {
       <form
         action={this.props.action}
         method={this.props.method}
-        onSubmit={e => e.preventDefault() || this.props.onSubmit(this.state.formData)}
+        onSubmit={e => {
+          e.preventDefault()
+          this.props.onSubmit(this.state.formData)
+        }}
       >
         {this.props.children}
         <input type="submit" />

@@ -12,7 +12,7 @@ const List = ({name, value, children, setValue, defaultValue}) => (
       </ListItem>
     ))}
     <li>
-      <button type="button" onClick={() => setValue(value.concat(defaultValue))}>
+      <button type="button" onClick={() => setValue(value.concat({}))}>
         Add {name}
       </button>
     </li>

@@ -32,11 +32,10 @@ const withFormData = (BaseComponent) => {
     }
 
     setValue(value) {
-      const formData = JSON.parse(JSON.stringify(this.context.formData))
       value == null
-        ? jsonPointer.remove(formData, this.name)
-        : jsonPointer.set(formData, this.name, value)
-      this.context.setFormData(formData)
+        ? jsonPointer.remove(this.context.formData, this.name)
+        : jsonPointer.set(this.context.formData, this.name, value)
+      this.context.setFormData(this.context.formData)
     }
 
     render() {

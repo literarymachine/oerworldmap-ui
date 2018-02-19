@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import jsonPointer from 'json-pointer'
+import merge from 'deepmerge'
 
 import Form from './Form'
 import Fieldset from './Fieldset'
@@ -9,28 +10,38 @@ import List from './List'
 
 const cloneSchema = (schema) => JSON.parse(JSON.stringify(schema))
 
-const mergeSchemas = (schemas) => schemas.reduce(
-  (acc, curr) => Object.assign(acc, curr), {}
-)
-
-const getSchema = (root, ptr) => resolveRefs(
+const getSchema = (root, ptr) => expandSchema(
   root, cloneSchema(jsonPointer.get(root, ptr.slice(1)))
 )
 
-const resolveRefs = (root, schema) => {
+const expandSchema = (root, schema) => {
+  schema = resolveRefs(root, schema)
+  if ('items' in schema) {
+    schema.items = expandSchema(root, schema.items)
+  }
+  if ('allOf' in schema) {
+    schema.allOf.forEach((allOf) =>
+      schema = merge(schema, expandSchema(root, allOf))
+    )
+    delete schema.allOf
+  }
   Object.keys(schema.properties || {}).forEach((property) => {
-    if ('$ref' in schema.properties[property]) {
-      schema.properties[property] = mergeSchemas([
-        getSchema(root, schema.properties[property]['$ref']),
-        schema.properties[property]
-      ])
-      delete(schema.properties[property]['$ref'])
-    }
+    schema.properties[property] = expandSchema(
+      root, schema.properties[property]
+    )
   })
   return schema
 }
 
-const processSchema = (root, schema) => {
+const resolveRefs = (root, schema) => {
+  if ('$ref' in schema) {
+    schema = merge(getSchema(root, schema['$ref']), schema)
+    delete schema['$ref']
+  }
+  return schema
+}
+
+const processSchema = (schema) => {
   switch (schema.type) {
     case 'string':
       return <Input type="text" />
@@ -40,25 +51,28 @@ const processSchema = (root, schema) => {
     case 'boolean':
       return <Input type="checkbox" />
     case 'array':
-      return <List>{processSchema(root, resolveRefs(root, schema.items))}</List>
+      return <List>{processSchema(schema.items)}</List>
     case 'object':
       return (
         <Fieldset>
           {Object.keys(schema.properties).map((property) => React.cloneElement(
-            processSchema(root, resolveRefs(root, schema.properties[property])), {property}
+            processSchema(schema.properties[property]), {
+              property, key: property
+            }
           ))}
         </Fieldset>
       )
     case 'null':
     default:
-      console.warn('Could not build form component for', schema)
+      console.warn('Could not determine form component for', schema)
+      return <Input type="text" />
   }
 }
 
 const Builder = ({schema}) => (
   <Form>
     {console.log(getSchema(schema, '#/definitions/Organization'))}
-    {processSchema(schema, getSchema(schema, '#/definitions/Organization'))}
+    {processSchema(getSchema(schema, '#/definitions/Organization'))}
   </Form>
 )
 
