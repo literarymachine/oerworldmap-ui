@@ -4,47 +4,28 @@ import PropTypes from 'prop-types'
 import ListItem from './ListItem'
 import withFormData from './withFormData'
 
-class List extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.insert = null
-  }
-
-  componentDidUpdate() {
-    this.insert = null
-  }
-
-  render() {
-    return (
-      <ul>
-        {this.props.value.map((item, index) => (
-          <ListItem property={index} key={index}>
-            {React.cloneElement(this.props.children)}
-          </ListItem>
-        ))}
-        {this.insert ? this.insert : (
-          <li>
-            <button
-              type="button"
-              onClick={() => {
-                this.insert = (
-                  <ListItem property={this.props.value.length} key={this.props.value.length}>
-                    {React.cloneElement(this.props.children)}
-                  </ListItem>
-                )
-                this.forceUpdate()
-              }}
-            >
-              Add {this.props.name}
-            </button>
-          </li>
-        )}
-      </ul>
-    )
-  }
-
-}
+const List = ({name, value, children}) => (
+  <ul>
+    {value.map((item, index) => (
+      <ListItem property={index} key={index}>
+        {React.cloneElement(children)}
+      </ListItem>
+    ))}
+    <ListItem property={value.length} key={value.length}>
+      <div className="newItemWrapper">
+        <input
+          type="checkbox"
+          key={`${name}-${value.length}`}
+          className="formControl" id={`${name}-toggle`}
+        />
+        <label htmlFor={`${name}-toggle`}>Add {name}</label>
+        <div className="newItem">
+          {React.cloneElement(children)}
+        </div>
+      </div>
+    </ListItem>
+  </ul>
+)
 
 List.propTypes = {
   name: PropTypes.string.isRequired,
