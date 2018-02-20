@@ -5,26 +5,29 @@ import ListItem from './ListItem'
 import withFormData from './withFormData'
 
 const List = ({name, value, children}) => (
-  <ul>
-    {value.map((item, index) => (
-      <ListItem property={index} key={index}>
-        {React.cloneElement(children)}
-      </ListItem>
-    ))}
-    <ListItem property={value.length} key={value.length}>
-      <div className="newItemWrapper">
-        <input
-          type="checkbox"
-          key={`${name}-${value.length}`}
-          className="formControl" id={`${name}-toggle`}
-        />
-        <label htmlFor={`${name}-toggle`}>Add {name}</label>
-        <div className="newItem">
+  <div role="group" aria-labelledby={`${name}-label`}>
+    <div id={`${name}-label`}>{name}</div>
+    <ul>
+      {value.map((item, index) => (
+        <ListItem property={index} key={index}>
           {React.cloneElement(children)}
+        </ListItem>
+      ))}
+      <ListItem property={value.length} key={value.length}>
+        <div className="newItemWrapper">
+          <input
+            type="checkbox"
+            key={`${name}-${value.length}`}
+            className="formControl" id={`${name}-toggle`}
+          />
+          <label htmlFor={`${name}-toggle`}>Add {name}</label>
+          <div className="newItem">
+            {React.cloneElement(children)}
+          </div>
         </div>
-      </div>
-    </ListItem>
-  </ul>
+      </ListItem>
+    </ul>
+  </div>
 )
 
 List.propTypes = {

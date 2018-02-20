@@ -17,22 +17,26 @@ const onFocus = (e) => {
 }
 
 const Input = ({type, name, value, setValue}) => (
-  <input
-    type={type}
-    name={name}
-    value={value}
-    placeholder={name}
-    autoFocus={autoFocus(name)}
-    onFocus={onFocus}
-    onChange={(e) => {
-      changed = name
-      setValue(
-        e.target.type === 'checkbox'
-          ? (e.target.checked ? "true" : null)
-          : e.target.value
-      )
-    }}
-  />
+  <div className={`input ${type} ${name}`}>
+    <label htmlFor={name}>{name}</label>
+    <input
+      type={type}
+      name={name}
+      value={value}
+      id={name}
+      placeholder={name}
+      autoFocus={autoFocus(name)}
+      onFocus={onFocus}
+      onChange={(e) => {
+        changed = name
+        setValue(
+          e.target.type === 'checkbox'
+            ? (e.target.checked ? "true" : null)
+            : e.target.value
+        )
+      }}
+    />
+  </div>
 )
 
 Input.propTypes = {
