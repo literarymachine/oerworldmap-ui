@@ -31,12 +31,14 @@ const withFormData = (BaseComponent) => {
       this.name = jsonPointer.compile(this.path)
       this.getValue = this.getValue.bind(this)
       this.setValue = this.setValue.bind(this)
+      this.getErrors = this.getErrors.bind(this)
     }
 
     getChildContext() {
       return {
         path: this.path,
-        formData: this.context.formData
+        formData: this.context.formData,
+        formErrors: this.context.formErrors
       }
     }
 
@@ -51,8 +53,24 @@ const withFormData = (BaseComponent) => {
       this.context.setFormData(prune(this.context.formData))
     }
 
+    getErrors() {
+      return this.context.formErrors.filter(
+        (error) => error.keyword === 'required'
+          ? `${error.dataPath}/${error.params.missingProperty}` === this.name
+          : error.dataPath === this.name
+      )
+    }
+
     render() {
-      return <BaseComponent {...this.props} name={this.name} value={this.getValue()} setValue={this.setValue} />
+      return (
+        <BaseComponent
+          {...this.props}
+          name={this.name}
+          value={this.getValue()}
+          setValue={this.setValue}
+          errors={this.getErrors()}
+        />
+      )
     }
 
   }
@@ -60,12 +78,14 @@ const withFormData = (BaseComponent) => {
   formComponent.childContextTypes = {
     path: PropTypes.array,
     formData: PropTypes.objectOf(PropTypes.any),
+    formErrors: PropTypes.arrayOf(PropTypes.object),
     setFormData: PropTypes.func
   }
 
   formComponent.contextTypes = {
     path: PropTypes.array,
     formData: PropTypes.objectOf(PropTypes.any),
+    formErrors: PropTypes.arrayOf(PropTypes.object),
     setFormData: PropTypes.func
   }
 

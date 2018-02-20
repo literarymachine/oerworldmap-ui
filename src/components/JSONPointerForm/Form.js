@@ -18,6 +18,7 @@ class Form extends React.Component {
   getChildContext() {
     return {
       formData: JSON.parse(JSON.stringify(this.state.formData)),
+      formErrors: JSON.parse(JSON.stringify(this.props.errors)),
       setFormData: formData => this.setState({formData})
     }
   }
@@ -25,6 +26,7 @@ class Form extends React.Component {
   render() {
     return (
       <form
+        className="Form"
         action={this.props.action}
         method={this.props.method}
         onSubmit={e => {
@@ -55,6 +57,7 @@ Form.defaultProps = {
 
 Form.childContextTypes = {
   formData: PropTypes.objectOf(PropTypes.any),
+  formErrors: PropTypes.arrayOf(PropTypes.object),
   setFormData: PropTypes.func
 }
 

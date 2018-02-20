@@ -330,13 +330,33 @@ pre {
 
 /* JSONPointerForm */
 
-.newItem,
-input[type=checkbox].formControl:checked + label,
-input[type=checkbox].formControl {
-  display: none;
-}
+.Form {
 
-input[type=checkbox].formControl:not(:checked) + label,
-input[type=checkbox].formControl:checked ~ .newItem {
-  display: block;
+  & input {
+    width: 100%;
+  }
+
+  & .label,
+  & label {
+    display: block;
+  }
+
+  & .List {
+    & ul {
+      padding-left: 0;
+      list-style: none;
+    }
+  }
+
+  & .newItem,
+  & input[type=checkbox].formControl:checked + label,
+  & input[type=checkbox].formControl {
+    display: none;
+  }
+
+  & input[type=checkbox].formControl:not(:checked) + label,
+  & input[type=checkbox].formControl:checked ~ .newItem {
+    display: block;
+  }
+
 }

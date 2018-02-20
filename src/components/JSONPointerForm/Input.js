@@ -16,9 +16,12 @@ const onFocus = (e) => {
   e.target.value = tmp
 }
 
-const Input = ({type, name, value, setValue}) => (
+const Input = ({type, name, value, setValue, errors}) => (
   <div className={`input ${type} ${name}`}>
     <label htmlFor={name}>{name}</label>
+    {errors.map((error, index) => (
+      <div className="error" key={index}>{error.message}</div>
+    ))}
     <input
       type={type}
       name={name}
@@ -43,12 +46,14 @@ Input.propTypes = {
   type: PropTypes.string,
   name: PropTypes.string.isRequired,
   value: PropTypes.string,
-  setValue: PropTypes.func.isRequired
+  setValue: PropTypes.func.isRequired,
+  errors: PropTypes.arrayOf(PropTypes.object)
 }
 
 Input.defaultProps = {
   type: 'text',
-  value: ''
+  value: '',
+  errors: []
 }
 
 export default withFormData(Input)

@@ -16,7 +16,7 @@ class Builder extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      errors: {}
+      errors: []
     }
     this.ajv = new Ajv({
       schemaId: 'id',
@@ -32,8 +32,10 @@ class Builder extends React.Component {
 
   onSubmit = (data) => this.validate(data)
     ? console.log("valid", data)
-    : this.setState({errors: this.validate.errors}) &&
-      console.warn("invalid", this.validate.errors, data)
+    : this.setState(
+      {errors: this.validate.errors},
+      () => console.warn("invalid", this.validate.errors, data)
+    )
 
   getSchema = (ptr) => this.expandSchema(
     cloneSchema(jsonPointer.get(this.props.schema, ptr.slice(1)))
