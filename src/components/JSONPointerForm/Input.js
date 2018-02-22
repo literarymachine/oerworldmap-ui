@@ -16,6 +16,16 @@ const onFocus = (e) => {
   e.target.value = tmp
 }
 
+const castValue = (target) => {
+  switch (target.type) {
+    case 'checkbox':
+      return target.checked ? "true" : null
+    default:
+      // TODO: properly cast number to int or float
+      return target.value
+  }
+}
+
 const Input = ({type, name, value, setValue, errors}) => (
   <div className={`input ${type} ${name}`}>
     <label htmlFor={name}>{name}</label>
@@ -30,14 +40,7 @@ const Input = ({type, name, value, setValue, errors}) => (
       placeholder={name}
       autoFocus={autoFocus(name)}
       onFocus={onFocus}
-      onChange={(e) => {
-        changed = name
-        setValue(
-          e.target.type === 'checkbox'
-            ? (e.target.checked ? "true" : null)
-            : e.target.value
-        )
-      }}
+      onChange={(e) => changed = name && setValue(castValue(e.target))}
     />
   </div>
 )
@@ -45,7 +48,11 @@ const Input = ({type, name, value, setValue, errors}) => (
 Input.propTypes = {
   type: PropTypes.string,
   name: PropTypes.string.isRequired,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.bool
+  ]),
   setValue: PropTypes.func.isRequired,
   errors: PropTypes.arrayOf(PropTypes.object)
 }
