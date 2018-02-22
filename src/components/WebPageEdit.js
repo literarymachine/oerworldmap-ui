@@ -2,6 +2,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Composer } from 'json-pointer-form'
 
+import Builder from './JSONPointerForm/Builder'
+
 import Icon from './Icon'
 import withI18n from './withI18n'
 import withEmitter from './withEmitter'
@@ -22,15 +24,16 @@ const getLabel = (translate, value) => {
 }
 
 const WebPageEdit = ({about, emitter, translate}) => (
-  <Composer
-    value={about}
-    schema={schema}
-    submit={data => emitter.emit('submit', {url: `/resource/${about['@id'] || ''}`, data})}
-    getOptions={(term, schema, callback) => emitter.emit('getOptions', {term, schema, callback})}
-    getLabel={value => getLabel(translate, value)}
-    submitLabel={translate('publish')}
-    submitNote={translate('ResourceIndex.index.agreeMessage')}
-  />
+  // <Composer
+  //   value={about}
+  //   schema={schema}
+  //   submit={data => emitter.emit('submit', {url: `/resource/${about['@id'] || ''}`, data})}
+  //   getOptions={(term, schema, callback) => emitter.emit('getOptions', {term, schema, callback})}
+  //   getLabel={value => getLabel(translate, value)}
+  //   submitLabel={translate('publish')}
+  //   submitNote={translate('ResourceIndex.index.agreeMessage')}
+  // />
+  <Builder schema={schema} data={about} />
 )
 
 WebPageEdit.propTypes = {

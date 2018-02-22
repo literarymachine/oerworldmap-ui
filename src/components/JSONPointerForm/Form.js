@@ -11,7 +11,7 @@ class Form extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      formData: {}
+      formData: props.data || {}
     }
   }
 

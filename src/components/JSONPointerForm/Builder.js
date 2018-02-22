@@ -8,6 +8,7 @@ import Form from './Form'
 import Fieldset from './Fieldset'
 import Input from './Input'
 import List from './List'
+import Select from './Select'
 
 const cloneSchema = (schema) => JSON.parse(JSON.stringify(schema))
 
@@ -71,7 +72,9 @@ class Builder extends React.Component {
   processSchema = (schema) => {
     switch (schema.type) {
       case 'string':
-        return <Input type="text" />
+        return schema.enum
+          ? <Select options={schema.enum} />
+          : <Input type="text" />
       case 'integer':
       case 'number':
         return <Input type="number" />
@@ -97,7 +100,7 @@ class Builder extends React.Component {
   }
 
   render = () => (
-    <Form onSubmit={this.onSubmit} errors={this.state.errors}>
+    <Form onSubmit={this.onSubmit} errors={this.state.errors} data={this.props.data}>
       {this.formComponents}
     </Form>
   )
