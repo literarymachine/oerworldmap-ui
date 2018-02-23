@@ -1,5 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import mitt from 'mitt'
+import jsonPointer from 'json-pointer'
+import { detailedDiff } from 'deep-object-diff'
 
 import Input from './Input'
 import Fieldset from './Fieldset'
@@ -11,15 +14,40 @@ class Form extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      formData: props.data || {}
+      value: props.data || {}
     }
+    this.value = props.data
+    this.emitter = mitt()
+    this.emitter.on('set', ({name, value}) => {
+      this.emitter.emit('update', {name, value})
+      const after = JSON.parse(JSON.stringify(this.value))
+      jsonPointer.set(after, name, value)
+      const change = detailedDiff(this.value, after)
+      this.value = after
+      Object.keys(change.added).forEach(property =>
+        name !== `/${property}` &&
+          this.emitter.emit('update', {
+            name: `/${property}`,
+            value: this.value[property]
+          })
+      )
+      Object.keys(change.deleted).forEach(property =>
+        name !== `/${property}` &&
+          this.emitter.emit('update', {
+            name: `/${property}`,
+            value: this.value[property]
+          })
+      )
+    })
   }
 
   getChildContext() {
     return {
-      formData: JSON.parse(JSON.stringify(this.state.formData)),
-      formErrors: JSON.parse(JSON.stringify(this.props.errors)),
-      setFormData: formData => this.setState({formData})
+      formData: Object.assign({
+        get: (pointer) => jsonPointer.has(this.value, pointer)
+          ? jsonPointer.get(this.value, pointer)
+          : undefined
+      }, this.emitter)
     }
   }
 
@@ -56,9 +84,7 @@ Form.defaultProps = {
 }
 
 Form.childContextTypes = {
-  formData: PropTypes.objectOf(PropTypes.any),
-  formErrors: PropTypes.arrayOf(PropTypes.object),
-  setFormData: PropTypes.func
+  formData: PropTypes.objectOf(PropTypes.any)
 }
 
 export default Form

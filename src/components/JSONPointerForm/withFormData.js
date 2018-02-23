@@ -3,21 +3,6 @@ import PropTypes from 'prop-types'
 import jsonPointer from 'json-pointer'
 import _ from 'lodash'
 
-// https://stackoverflow.com/a/26202058
-const prune = (current) => {
-  _.forOwn(current, (value, key) => {
-    if (_.isUndefined(value) || _.isNull(value) || _.isNaN(value) ||
-      (_.isString(value) && _.isEmpty(value)) ||
-      (_.isObject(value) && _.isEmpty(prune(value)))) {
-      delete current[key]
-    }
-  })
-  if (_.isArray(current)) {
-    _.pull(current, undefined)
-  }
-  return current
-}
-
 const withFormData = (BaseComponent) => {
 
   const formComponent = class FormComponent extends React.Component {
@@ -29,36 +14,35 @@ const withFormData = (BaseComponent) => {
         ? [...parents, props.property]
         : parents
       this.name = jsonPointer.compile(this.path)
-      this.getValue = this.getValue.bind(this)
+      this.state = {
+        value: context.formData.get(this.name),
+        errors: undefined
+      }
       this.setValue = this.setValue.bind(this)
-      this.getErrors = this.getErrors.bind(this)
+      this.receiveUpdate = this.receiveUpdate.bind(this)
+    }
+
+    receiveUpdate({name, value}) {
+      name === this.name && this.setState({value})
+    }
+
+    componentDidMount() {
+      this.context.formData.on('update', this.receiveUpdate)
+    }
+
+    componentWillUnmount() {
+      this.context.formData.off('update', this.receiveUpdate)
     }
 
     getChildContext() {
       return {
         path: this.path,
-        formData: this.context.formData,
-        formErrors: this.context.formErrors
+        formData: this.context.formData
       }
     }
 
-    getValue() {
-      return jsonPointer.has(this.context.formData, this.name)
-        ? jsonPointer.get(this.context.formData, this.name)
-        : undefined
-    }
-
     setValue(value) {
-      jsonPointer.set(this.context.formData, this.name, value)
-      this.context.setFormData(prune(this.context.formData))
-    }
-
-    getErrors() {
-      return this.context.formErrors.filter(
-        (error) => error.keyword === 'required'
-          ? `${error.dataPath}/${error.params.missingProperty}` === this.name
-          : error.dataPath === this.name
-      )
+      this.context.formData.emit('set', {name: this.name, value})
     }
 
     render() {
@@ -66,9 +50,9 @@ const withFormData = (BaseComponent) => {
         <BaseComponent
           {...this.props}
           name={this.name}
-          value={this.getValue()}
+          value={this.state.value}
           setValue={this.setValue}
-          errors={this.getErrors()}
+          errors={this.state.errors}
         />
       )
     }
@@ -77,16 +61,12 @@ const withFormData = (BaseComponent) => {
 
   formComponent.childContextTypes = {
     path: PropTypes.array,
-    formData: PropTypes.objectOf(PropTypes.any),
-    formErrors: PropTypes.arrayOf(PropTypes.object),
-    setFormData: PropTypes.func
+    formData: PropTypes.objectOf(PropTypes.any)
   }
 
   formComponent.contextTypes = {
     path: PropTypes.array,
-    formData: PropTypes.objectOf(PropTypes.any),
-    formErrors: PropTypes.arrayOf(PropTypes.object),
-    setFormData: PropTypes.func
+    formData: PropTypes.objectOf(PropTypes.any)
   }
 
   return formComponent

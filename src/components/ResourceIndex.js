@@ -63,14 +63,14 @@ const ResourceIndex = ({
       </Column>
     </Columns>
 
-    <Map
+    {/* <Map
       aggregations={aggregations}
       emitter={emitter}
       mapboxConfig={mapboxConfig}
       features={features}
       iso3166={iso3166}
       map={map}
-    />
+    /> */}
 
   </div>
 )

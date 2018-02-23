@@ -7,7 +7,7 @@ import withI18n from './withI18n'
 const WebPageCover = ({geo, about, translate, mapboxConfig}) => (
   <div className="WebPageCover">
 
-    {geo &&
+    {/* {geo &&
       <MiniMap
         mapboxConfig={mapboxConfig}
         features={geo && geo.geometry}
@@ -20,7 +20,7 @@ const WebPageCover = ({geo, about, translate, mapboxConfig}) => (
           : [geo.geometry.coordinates[0]-1, geo.geometry.coordinates[1]]
         }
       />
-    }
+    } */}
 
     {about.image &&
       <div className="image">
