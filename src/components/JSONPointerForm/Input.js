@@ -26,9 +26,9 @@ const castValue = (target) => {
   }
 }
 
-const Input = ({type, name, value, setValue, errors}) => (
-  <div className={`input ${type} ${name}`}>
-    <label htmlFor={name}>{name}</label>
+const Input = ({type, name, value, setValue, errors, property}) => (
+  <div className={`Input ${type} ${property || ''}`.trim()}>
+    <label htmlFor={name}>{property}</label>
     {errors.map((error, index) => (
       <div className="error" key={index}>{error.message}</div>
     ))}
@@ -40,7 +40,7 @@ const Input = ({type, name, value, setValue, errors}) => (
       placeholder={name}
       autoFocus={autoFocus(name)}
       onFocus={onFocus}
-      onChange={(e) => changed = name && setValue(castValue(e.target))}
+      onChange={(e) => (changed = name) && setValue(castValue(e.target))}
     />
   </div>
 )

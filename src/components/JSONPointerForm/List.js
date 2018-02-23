@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 import ListItem from './ListItem'
 import withFormData from './withFormData'
 
-const List = ({name, value, children, errors}) => (
-  <div className="List" role="group" aria-labelledby={`${name}-label`}>
-    <div className="label" id={`${name}-label`}>{name}</div>
+const List = ({name, value, children, errors, property}) => (
+  <div className={`List ${property || ''}`.trim()} role="group" aria-labelledby={`${name}-label`}>
+    <div className="label" id={`${name}-label`}>{property}</div>
     {errors.map((error, index) => (
       <div className="error" key={index}>{error.message}</div>
     ))}
@@ -24,7 +24,7 @@ const List = ({name, value, children, errors}) => (
               key={`${name}-${value.length}`}
               className="formControl" id={`${name}-toggle`}
             />
-            <label htmlFor={`${name}-toggle`}>Add {name}</label>
+            <label htmlFor={`${name}-toggle`}>Add {property}</label>
             <div className="newItem">
               {React.cloneElement(children)}
             </div>

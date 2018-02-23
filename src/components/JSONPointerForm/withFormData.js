@@ -49,7 +49,6 @@ const withFormData = (BaseComponent) => {
     }
 
     setValue(value) {
-      console.log(value)
       jsonPointer.set(this.context.formData, this.name, value)
       this.context.setFormData(prune(this.context.formData))
     }
