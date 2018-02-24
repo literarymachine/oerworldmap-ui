@@ -9,6 +9,21 @@ import Fieldset from './Fieldset'
 import List from './List'
 import ListItem from './ListItem'
 
+const prune = (current) => {
+  _.forOwn(current, (value, key) => {
+    if (_.isUndefined(value) || _.isNull(value) || _.isNaN(value) ||
+      (_.isString(value) && _.isEmpty(value)) ||
+      (_.isObject(value) && _.isEmpty(prune(value)))) {
+      delete current[key]
+    }
+  })
+  if (_.isArray(current)) {
+    _.pull(current, undefined)
+  }
+  return current
+}
+
+
 class Form extends React.Component {
 
   constructor(props) {
@@ -16,12 +31,13 @@ class Form extends React.Component {
     this.state = {
       value: props.data || {}
     }
-    this.value = props.data
+    this.value = props.data || {}
     this.emitter = mitt()
     this.emitter.on('set', ({name, value}) => {
       this.emitter.emit('update', {name, value})
-      const after = JSON.parse(JSON.stringify(this.value))
+      let after = JSON.parse(JSON.stringify(this.value))
       jsonPointer.set(after, name, value)
+      after = prune(after)
       const change = detailedDiff(this.value, after)
       this.value = after
       Object.keys(change.added).forEach(property =>
