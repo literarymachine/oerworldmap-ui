@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import mitt from 'mitt'
 import jsonPointer from 'json-pointer'
-import { detailedDiff } from 'deep-object-diff'
 
 import Input from './Input'
 import Fieldset from './Fieldset'
@@ -38,22 +37,18 @@ class Form extends React.Component {
       let after = JSON.parse(JSON.stringify(this.value))
       jsonPointer.set(after, name, value)
       after = prune(after)
-      const change = detailedDiff(this.value, after)
+      const currentSize = Object.keys(jsonPointer.dict(this.value)).length
+      const updatedSize = Object.keys(jsonPointer.dict(after)).length
+      const added = updatedSize > currentSize
+      const removed = !added && updatedSize < currentSize
+      if (added || removed) {
+        const rootProperty = jsonPointer.parse(name)[0]
+        this.emitter.emit('update', {
+          name: `/${rootProperty}`,
+          value: after[rootProperty]
+        })
+      }
       this.value = after
-      Object.keys(change.added).forEach(property =>
-        name !== `/${property}` &&
-          this.emitter.emit('update', {
-            name: `/${property}`,
-            value: this.value[property]
-          })
-      )
-      Object.keys(change.deleted).forEach(property =>
-        name !== `/${property}` &&
-          this.emitter.emit('update', {
-            name: `/${property}`,
-            value: this.value[property]
-          })
-      )
     })
   }
 
