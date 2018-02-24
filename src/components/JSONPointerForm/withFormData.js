@@ -18,6 +18,8 @@ const prune = (current) => {
   return current
 }
 
+let lastUpdate = null
+
 const withFormData = (BaseComponent) => {
 
   const formComponent = class FormComponent extends React.Component {
@@ -50,6 +52,7 @@ const withFormData = (BaseComponent) => {
 
     setValue(value) {
       jsonPointer.set(this.context.formData, this.name, value)
+      lastUpdate = this.name
       this.context.setFormData(prune(this.context.formData))
     }
 
@@ -59,6 +62,10 @@ const withFormData = (BaseComponent) => {
           ? `${error.dataPath}/${error.params.missingProperty}` === this.name
           : error.dataPath === this.name
       )
+    }
+
+    shouldComponentUpdate(nextProps) {
+      return lastUpdate.startsWith(this.name)
     }
 
     render() {
