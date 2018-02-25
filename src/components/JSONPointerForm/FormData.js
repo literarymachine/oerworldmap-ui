@@ -21,9 +21,11 @@ class FormData {
     let state = initialState || {}
 
     Object.assign(this, mitt(), {
-      get: (pointer) => jsonPointer.has(state, pointer)
-        ? jsonPointer.get(state, pointer)
-        : undefined
+      get: (pointer) => pointer
+        ? jsonPointer.has(state, pointer)
+          ? jsonPointer.get(state, pointer)
+          : undefined
+        : state
     })
 
     this.on('set', ({name, value}) => {

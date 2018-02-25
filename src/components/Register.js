@@ -4,7 +4,8 @@ import { Composer } from 'json-pointer-form'
 
 import Form from './JSONPointerForm/Form'
 
-
+import JsonSchema from './JSONPointerForm/JsonSchema'
+import validate from './JSONPointerForm/validate'
 import Input from './JSONPointerForm/Input'
 import Fieldset from './JSONPointerForm/Fieldset'
 import List from './JSONPointerForm/List'
@@ -64,7 +65,9 @@ const Register = ({translate, emitter}) => (
           </Fieldset>
         </Fieldset>
       </Form> */}
-      <Builder schema={schema} />
+      <Form validate={validate(JsonSchema(schema).get('#/definitions/Organization'))}>
+        <Builder schema={JsonSchema(schema).get('#/definitions/Organization')} />
+      </Form>
     </FullModal>
   </div>
 )

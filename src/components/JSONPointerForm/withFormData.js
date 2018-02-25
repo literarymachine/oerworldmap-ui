@@ -20,18 +20,25 @@ const withFormData = (BaseComponent) => {
       }
       this.setValue = this.setValue.bind(this)
       this.receiveUpdate = this.receiveUpdate.bind(this)
+      this.receiveErrors = this.receiveErrors.bind(this)
     }
 
     receiveUpdate({name, value}) {
       name === this.name && this.setState({value})
     }
 
+    receiveErrors({name, errors}) {
+      name === this.name && this.setState({errors})
+    }
+
     componentDidMount() {
       this.context.formData.on('update', this.receiveUpdate)
+      this.context.formData.on('error', this.receiveErrors)
     }
 
     componentWillUnmount() {
       this.context.formData.off('update', this.receiveUpdate)
+      this.context.formData.off('error', this.receiveErrors)
     }
 
     getChildContext() {

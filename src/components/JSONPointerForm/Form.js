@@ -28,7 +28,12 @@ class Form extends React.Component {
         method={this.props.method}
         onSubmit={e => {
           e.preventDefault()
-          this.props.onSubmit(this.state.formData)
+          const data = this.formData.get()
+          this.props.validate(data)
+            ? this.props.onSubmit(this.formData.get())
+            : this.props.validate.errors.forEach(error =>
+                this.formData.emit('error', {name: error.dataPath, errors: [error]})
+              )
         }}
       >
         {this.props.children}
@@ -43,13 +48,15 @@ Form.propTypes = {
   action: PropTypes.string,
   method: PropTypes.string,
   onSubmit: PropTypes.func,
+  validate: PropTypes.func,
   children: PropTypes.node.isRequired
 }
 
 Form.defaultProps = {
   action: '',
   method: 'get',
-  onSubmit: formData => console.log(formData)
+  onSubmit: formData => console.log(formData),
+  validate: formData => true
 }
 
 Form.childContextTypes = {
