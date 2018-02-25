@@ -1,64 +1,22 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import mitt from 'mitt'
-import jsonPointer from 'json-pointer'
 
+import FormData from './FormData'
 import Input from './Input'
 import Fieldset from './Fieldset'
 import List from './List'
 import ListItem from './ListItem'
 
-const prune = (current) => {
-  _.forOwn(current, (value, key) => {
-    if (_.isUndefined(value) || _.isNull(value) || _.isNaN(value) ||
-      (_.isString(value) && _.isEmpty(value)) ||
-      (_.isObject(value) && _.isEmpty(prune(value)))) {
-      delete current[key]
-    }
-  })
-  if (_.isArray(current)) {
-    _.pull(current, undefined)
-  }
-  return current
-}
-
-
 class Form extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {
-      value: props.data || {}
-    }
-    this.value = props.data || {}
-    this.emitter = mitt()
-    this.emitter.on('set', ({name, value}) => {
-      this.emitter.emit('update', {name, value})
-      let after = JSON.parse(JSON.stringify(this.value))
-      jsonPointer.set(after, name, value)
-      after = prune(after)
-      const currentSize = Object.keys(jsonPointer.dict(this.value)).length
-      const updatedSize = Object.keys(jsonPointer.dict(after)).length
-      const added = updatedSize > currentSize
-      const removed = !added && updatedSize < currentSize
-      if (added || removed) {
-        const rootProperty = jsonPointer.parse(name)[0]
-        this.emitter.emit('update', {
-          name: `/${rootProperty}`,
-          value: after[rootProperty]
-        })
-      }
-      this.value = after
-    })
+    this.formData = new FormData(props.data)
   }
 
   getChildContext() {
     return {
-      formData: Object.assign({
-        get: (pointer) => jsonPointer.has(this.value, pointer)
-          ? jsonPointer.get(this.value, pointer)
-          : undefined
-      }, this.emitter)
+      formData: this.formData
     }
   }
 
