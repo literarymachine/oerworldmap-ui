@@ -1,16 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import jsonPointer from 'json-pointer'
-import merge from 'deepmerge'
 import Ajv from 'ajv'
 
+import JsonSchema from './JsonSchema'
 import Form from './Form'
 import Fieldset from './Fieldset'
 import Input from './Input'
 import List from './List'
 import Select from './Select'
-
-const cloneSchema = (schema) => JSON.parse(JSON.stringify(schema))
 
 class Builder extends React.Component {
 
@@ -25,7 +23,7 @@ class Builder extends React.Component {
       jsonPointers: true
     })
     this.ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-04.json'))
-    this.instanceSchema = this.getSchema('#/definitions/Organization')
+    this.instanceSchema = JsonSchema(props.schema).get('#/definitions/Organization')
     console.info(this.instanceSchema)
     this.validate = this.ajv.compile(this.instanceSchema)
     this.formComponents = this.processSchema(this.instanceSchema)
@@ -37,37 +35,6 @@ class Builder extends React.Component {
       {errors: this.validate.errors},
       () => console.warn("invalid", this.validate.errors, data)
     )
-
-  getSchema = (ptr) => this.expandSchema(
-    cloneSchema(jsonPointer.get(this.props.schema, ptr.slice(1)))
-  )
-
-  expandSchema = (schema) => {
-    schema = this.resolveRefs(schema)
-    if ('items' in schema) {
-      schema.items = this.expandSchema(schema.items)
-    }
-    if ('allOf' in schema) {
-      schema.allOf.forEach((allOf) =>
-        schema = merge(schema, this.expandSchema(allOf))
-      )
-      delete schema.allOf
-    }
-    Object.keys(schema.properties || {}).forEach((property) => {
-      schema.properties[property] = this.expandSchema(
-        schema.properties[property]
-      )
-    })
-    return schema
-  }
-
-  resolveRefs = (schema) => {
-    if ('$ref' in schema) {
-      schema = merge(this.getSchema(schema['$ref']), schema)
-      delete schema['$ref']
-    }
-    return schema
-  }
 
   processSchema = (schema) => {
     switch (schema.type) {
@@ -104,7 +71,6 @@ class Builder extends React.Component {
       {this.formComponents}
     </Form>
   )
-
 
 }
 
