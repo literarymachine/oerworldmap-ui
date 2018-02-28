@@ -22,7 +22,7 @@ const castValue = (target) => {
       return target.checked ? "true" : null
     default:
       // TODO: properly cast number to int or float
-      return target.value
+      return target.value || undefined
   }
 }
 
