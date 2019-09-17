@@ -126,8 +126,15 @@ export default (api, emitter, location) => {
       get: async (id, params, context, state) => {
         const { mapboxConfig, schema } = context
         const url = getURL({ path: `/resource/${id}`, params })
-        const data = state || await api.get(url, new Headers(context.headers))
-        const { about } = data
+        let data
+        if (state) {
+          data = state
+        } else {
+           data = await api.get(url, new Headers(context.headers))
+           data.about.comment = (await api.get(`/resource/?filter.about.commentOn.@id.keyword=${id}`))
+            .member.map(m => m.about)
+        }
+
         const component = data => (
           <WebPage
             {...data}
