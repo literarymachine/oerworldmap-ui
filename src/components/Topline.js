@@ -125,20 +125,20 @@ const Topline = ({
       </React.Fragment>
     )}
 
-    {about.agent
-    && about['@type'] === 'Action' && (
+    {about.member
+    && about['@type'] === 'Project' && (
       <React.Fragment>
         <hr />
         <div className="toplineEntry">
           <span>
-            {translate('Action.agent')}
+            {translate('Project.member')}
             :&nbsp;
           </span>
           <ul className="commaSeparatedList">
-            {about.agent.map(agent => (
-              <li key={agent['@id']}>
-                <Link href={`/resource/${agent['@id']}`}>
-                  {translate(agent.name)}
+            {about.member.map(member => (
+              <li key={member['@id']}>
+                <Link href={`/resource/${member['@id']}`}>
+                  {translate(member.name)}
                 </Link>
               </li>
             ))}
@@ -147,14 +147,14 @@ const Topline = ({
       </React.Fragment>
     )}
 
-    {about['@type'] === 'Action'
+    {about['@type'] === 'Project'
     && about.isFundedBy
     && about.isFundedBy.some(grant => grant.isAwardedBy) && (
       <React.Fragment>
         <hr />
         <div className="toplineEntry">
           <span>
-            {translate('Action.isFundedBy')}
+            {translate('Project.isFundedBy')}
             :&nbsp;
           </span>
           <ul className="commaSeparatedList">

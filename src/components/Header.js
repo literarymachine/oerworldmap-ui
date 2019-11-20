@@ -306,7 +306,7 @@ class Header extends React.Component {
                     </div>
                     <div className="col">
                       <ConceptBlock
-                        type="Action"
+                        type="Project"
                         conceptScheme={require('../json/projects.json').hasTopConcept}
                         linkTemplate="/resource/?filter.about.additionalType.@id={@id}"
                       />

@@ -6,7 +6,7 @@ const icons = {
   Person: 'user',
   Organization: 'users',
   Article: 'comment',
-  Action: 'gears',
+  Project: 'gears',
   Concept: 'tag',
   ConceptScheme: 'sitemap',
   Event: 'calendar',

@@ -56,10 +56,10 @@ const WebPageUserActions = ({
         data: {
           '@type': 'LikeAction',
           object: about,
-          agent: [{
+          agent: {
             '@id': user.id,
             '@type': 'Person',
-          }],
+          },
           startTime: new Date().toISOString(),
         },
       })
@@ -81,7 +81,7 @@ const WebPageUserActions = ({
   return (
     <div className="WebPageUserActions">
 
-      {['Organization', 'Action', 'Service', 'Product', 'Event', 'Article', 'WebPage', 'Policy'].includes(about['@type']) && (
+      {['Organization', 'Project', 'Service', 'Product', 'Event', 'Article', 'WebPage', 'Policy'].includes(about['@type']) && (
         <div className="action">
           <form onSubmit={e => e.preventDefault() || toggleLike()}>
             <button className={`btn ${like ? 'active' : ''}`} type="submit" title={translate('Like')}>
@@ -92,7 +92,7 @@ const WebPageUserActions = ({
         </div>
       )}
 
-      {['Organization', 'Action', 'Service', 'Product', 'Event', 'Article', 'WebPage', 'Policy'].includes(about['@type']) && (
+      {['Organization', 'Project', 'Service', 'Product', 'Event', 'Article', 'WebPage', 'Policy'].includes(about['@type']) && (
         <div className="action">
           <a href="#addLighthouse" className={`btn ${lighthouse['@id'] ? 'active' : ''}`}>
             <img className="i blueLighthouse" src="/public/lighthouse_16px_blue.svg" alt="Lighthouse" />
@@ -162,7 +162,7 @@ const WebPageUserActions = ({
         </div>
       )}
 
-      {(about['@type'] === 'Organization' || about['@type'] === 'Action') && (
+      {(about['@type'] === 'Organization' || about['@type'] === 'Project') && (
         <div className="action">
           <form onSubmit={e => e.preventDefault() || toggle('affiliate', isAffiliate)}>
             <button className={`btn ${isAffiliate ? 'active' : ''}`} type="submit" title={translate('I\'m a member')}>

@@ -464,7 +464,7 @@ const WebPageView = ({
             )}
 
             {
-              ['result', 'resultOf', 'provides', 'provider', 'agent'].map(
+              ['result', 'resultOf', 'provides', 'provider', 'member'].map(
                 prop => (
                   about[prop] && (
                     <Block
@@ -485,16 +485,16 @@ const WebPageView = ({
               )
             }
 
-            {about.agentIn && about.agentIn.some(item => item['@type'] === 'Action') && (
+            {about.memberOf && about.memberOf.some(item => item['@type'] === 'Project') && (
               <Block
-                collapsible={!expandAll && about.agentIn.filter(item => item['@type'] === 'Action').length > 3}
+                collapsible={!expandAll && about.memberOf.filter(item => item['@type'] === 'Project').length > 3}
                 collapsibleType="show-all"
                 className="list"
-                title={translate(`${about['@type']}.agentIn`)}
+                title={translate(`${about['@type']}.memberOf`)}
               >
                 <ItemList
                   tooltip={false}
-                  listItems={about.agentIn.filter(item => item['@type'] === 'Action')
+                  listItems={about.memberOf.filter(item => item['@type'] === 'Project')
                     .sort((a, b) => translate(a.name) > translate(b.name))}
                   className="prominent"
                 />

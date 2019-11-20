@@ -6,7 +6,7 @@ import Icon from './Icon'
 const labels = {
   Organization: 'Organizations',
   Service: 'Services',
-  Action: 'Projects',
+  Project: 'Projects',
   Person: 'People',
   Event: 'Events',
   Article: 'Stories',
