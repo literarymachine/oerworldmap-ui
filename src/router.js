@@ -130,8 +130,10 @@ export default (api, emitter, location) => {
         if (state) {
           data = state
         } else {
-           data = await api.get(url, new Headers(context.headers))
-           data.about.comment = (await api.get(`/resource/?filter.about.commentOn.@id.keyword=${id}`))
+          data = await api.get(url, new Headers(context.headers))
+          data.about.comment = (await api.get(`/resource/?filter.about.@type=Comment&filter.about.commentOn.@id=${id}`))
+            .member.map(m => m.about)
+          data.about.objectIn = (await api.get(`/resource/?filter.about.@type=LikeAction,LighthouseAction&filter.about.object.@id=${id}`))
             .member.map(m => m.about)
         }
 

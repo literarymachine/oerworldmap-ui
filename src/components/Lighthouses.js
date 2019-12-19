@@ -21,11 +21,9 @@ const Lighthouses = ({
       <div className="Comment" key={lighthouse['@id']}>
         <div className="head row auto">
           <div className="col">
-            {lighthouse.agent.map(author => (
-              <Link key={author['@id']} href={`/resource/${author['@id']}`}>
-                {translate(author['@id'])}
-              </Link>
-            ))}
+            <Link key={lighthouse.agent['@id']} href={`/resource/${lighthouse.agent['@id']}`}>
+              {translate(lighthouse.agent['@id'])}
+            </Link>
             {lighthouse.startTime && (
               <span
                 title={formatDate(lighthouse.startTime, moment)}

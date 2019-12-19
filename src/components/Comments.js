@@ -28,11 +28,9 @@ const Comments = ({
       <div className="Comment" key={comment['@id']}>
         <div className="head row auto">
           <div className="col">
-            {comment.author.map(author => (
-              <Link key={author['@id']} href={`/resource/${author['@id']}`}>
-                {translate(author['@id'])}
-              </Link>
-            ))}
+            <Link key={comment.author['@id']} href={`/resource/${comment.author['@id']}`}>
+              {translate(comment.author['@id'])}
+            </Link>
             {' '}
             <span
               title={formatDate(comment.dateCreated, moment)}
