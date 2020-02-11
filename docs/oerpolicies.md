@@ -4,7 +4,7 @@ class: oerPolicies
 ---
 
 <div style="width:100%;text-align:center;">
-<img style="width:auto;margin:0 auto;border:0px solid transparent;border-radius:10px;" src="/assets/images/oer_policy_registry_v01.png" title="The OER World Map Policy Registry">
+<img style="width:auto;margin:0 auto;border:0px solid transparent;border-radius:10px;" src="https://oerworldmap.org/assets/images/oer_policy_registry_v01.png" title="The OER World Map Policy Registry">
 </div>
 
 The OER Policy Registry allows anybody to easily share, update, and browse open education policies and legislation. It also hosts supporting policy resources such as case studies and guides. Adding open policies as a new layer to the OER World Map enables open advocates and policy makers to get a more complete picture of all open education activities in a particular region. It also provides a starting point for policy makers, open education activists and initiatives.
@@ -15,8 +15,6 @@ The OER Policy Registry allows anybody to easily share, update, and browse open 
 ### Add a policy
 
 Any registered OER world map user can add a policy to the OER policy registry: <a href="/resource/?add=Policy" target="_blank">Add a policy</a>. If you're not registered yet, you can <a href="https://oerworldmap.org/user/register" target="_blank">join here</a>. See the Policy Registry Manual for a detailed description of all fields: <a href="https://kurzelinks.de/yuge" target="_blank">Editors guide (beta)</a>
-
-<a href="/resource/?add=Policy" class="btn" target="_blank"><i class="fa fa-plus-square-o" aria-hidden="true"></i> Add a policy</a> <a href="https://kurzelinks.de/yuge" target="_blank" class="btn"><i class="fa fa-book" aria-hidden="true"></i> Editors guide (beta)</a>
 
 ### What was the origin of the OER policy registry @ OER World Map?
 
